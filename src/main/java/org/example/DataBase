@@ -1,0 +1,73 @@
+create table if not exists public.useraccount
+(
+    id           integer generated always as identity
+        primary key,
+    username     varchar(250),
+    nationalcode varchar(250)
+        constraint useraccount_pk
+            unique
+);
+
+alter table public.useraccount
+    owner to postgres;
+
+create table if not exists public.category
+(
+    id    integer generated always as identity
+        constraint category_pk
+            primary key,
+    title varchar(250)
+);
+
+alter table public.category
+    owner to postgres;
+
+create table if not exists public.product
+(
+    id          integer generated always as identity,
+    name        varchar(250),
+    count       integer,
+    price       integer,
+    barcode     integer not null
+        constraint product_pk
+            primary key,
+    description varchar(500),
+    category_id integer
+        constraint product___fk
+            references public.category,
+    code        integer
+);
+
+alter table public.product
+    owner to postgres;
+
+create table if not exists public.cart
+(
+    id      integer generated always as identity
+        constraint cart_pk
+            primary key,
+    barcode integer
+        constraint cart___fk2
+            references public.product,
+    count   integer,
+    user_id integer
+        constraint cart___fk
+            references public.useraccount
+);
+
+alter table public.cart
+    owner to postgres;
+
+create table if not exists public.fish
+(
+    id         integer generated always as identity,
+    totalprice integer      default 0,
+    confirm    varchar(250) default 'NO'::character varying,
+    user_id    integer
+        constraint fish___fk
+            references public.useraccount
+);
+
+alter table public.fish
+    owner to postgres;
+
